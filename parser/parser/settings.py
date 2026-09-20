@@ -1,3 +1,11 @@
+import sys
+from pathlib import Path
+
+# Добавляем корень проекта в sys.path, чтобы работали импорты core.* и domain.*
+project_root = Path(__file__).resolve().parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 # Scrapy settings for parser project
 #
 # For simplicity, this file contains only settings considered important or
@@ -19,7 +27,7 @@ ADDONS = {}
 #USER_AGENT = "parser (+http://www.yourdomain.com)"
 
 # Obey robots.txt rules
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 # Concurrency and throttling settings
 #CONCURRENT_REQUESTS = 16
@@ -85,3 +93,9 @@ DOWNLOAD_DELAY = 1
 
 # Set settings whose default value is deprecated to a future-proof value
 FEED_EXPORT_ENCODING = "utf-8"
+
+ITEM_PIPELINES = {
+    "parser.pipelines.DatabasePipeline": 300,
+}
+
+USER_AGENT = "currency-service/1.0 (+https://example.com)"
