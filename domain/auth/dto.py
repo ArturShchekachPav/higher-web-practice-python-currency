@@ -1,6 +1,15 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
+
+
+class Login(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class Refresh(BaseModel):
+    refresh_token: str
 
 
 class Token(BaseModel):

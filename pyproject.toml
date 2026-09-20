@@ -5,8 +5,16 @@ description = "Python service for parsing and check currency rate"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "alembic>=1.20.0",
+    "asyncpg>=0.31.0",
     "fastapi>=0.135.1",
-    "pydantic>=2.12.5",
+    "passlib[bcrypt]>=1.7.4",
+    "psycopg2-binary>=2.9.13",
+    "pydantic[email]>=2.12.5",
+    "pydantic-settings>=2.15.0",
+    "python-jose[cryptography]>=3.5.0",
     "scrapy>=2.14.1",
+    "sqlalchemy>=2.0.54",
     "uvicorn>=0.41.0",
+    "bcrypt<4.1",
 ]
