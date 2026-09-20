@@ -39,7 +39,7 @@ class DatabasePipeline:
                     )
                     session.add(currency)
                     session.flush()
-                
+
                 existing = session.execute(
                     select(ExchangeRate).where(
                         ExchangeRate.currency_id == currency.id,
@@ -48,11 +48,13 @@ class DatabasePipeline:
                 ).scalar_one_or_none()
 
                 if existing is None:
-                    session.add(ExchangeRate(
-                        currency_id=currency.id,
-                        rate=item["rate"],
-                        date=item["date"],
-                    ))
+                    session.add(
+                        ExchangeRate(
+                            currency_id=currency.id,
+                            rate=item["rate"],
+                            date=item["date"],
+                        )
+                    )
                 else:
                     existing.rate = item["rate"]
 

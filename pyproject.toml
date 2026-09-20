@@ -19,4 +19,7 @@ dependencies = [
     "bcrypt<4.1",
     "psycopg[binary]>=3.3.6",
     "apscheduler>=3.11.3",
+    "isort>=9.0.1",
+    "black>=26.5.1",
+    "flake8>=7.3.0",
 ]

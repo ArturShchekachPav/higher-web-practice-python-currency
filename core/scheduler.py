@@ -1,5 +1,4 @@
 import asyncio
-from datetime import datetime, timezone
 import logging
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -15,7 +14,11 @@ async def run_spider() -> None:
     logger.info("Starting CBR spider...")
     try:
         process = await asyncio.create_subprocess_exec(
-            "scrapy", "crawl", "cbr", "-a", "days=30",
+            "scrapy",
+            "crawl",
+            "cbr",
+            "-a",
+            "days=30",
             cwd="/app/parser",
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,

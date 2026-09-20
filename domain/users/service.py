@@ -1,9 +1,10 @@
-from domain.users.dto import CreateUserDTO, UpdateUserDTO
-from domain.users.models import User
-from domain.users.exceptions import UserNotFoundError, UserAlreadyExistsError
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from core.security import hash_password
+from domain.users.dto import CreateUserDTO, UpdateUserDTO
+from domain.users.exceptions import UserAlreadyExistsError, UserNotFoundError
+from domain.users.models import User
 
 
 class UserService:
@@ -17,10 +18,14 @@ class UserService:
         :return: Объект модели пользователя
         :raises UserNotFoundError: Если пользователь с указанным email не существует
         """
-        result = await self.session.execute(select(User).where(User.email == user_email))
+        result = await self.session.execute(
+            select(User).where(User.email == user_email)
+        )
         user = result.scalar_one_or_none()
         if not user:
-            raise UserNotFoundError(f'Пользователь с email {user_email} не найден!')
+            raise UserNotFoundError(
+                f"Пользователь с email {user_email} не найден!"
+            )
         return user
 
     async def get_user_by_id(self, user_id: int) -> User:
@@ -30,10 +35,12 @@ class UserService:
         :return: Объект модели пользователя
         :raises UserNotFoundError: Если пользователь с указанным ID не существует
         """
-        result = await self.session.execute(select(User).where(User.id == user_id))
+        result = await self.session.execute(
+            select(User).where(User.id == user_id)
+        )
         user = result.scalar_one_or_none()
         if not user:
-            raise UserNotFoundError(f'Пользователь с id {user_id} не найден!')
+            raise UserNotFoundError(f"Пользователь с id {user_id} не найден!")
         return user
 
     async def create_user(self, obj_in: CreateUserDTO) -> User:
@@ -71,4 +78,6 @@ class UserService:
         )
         user = result.scalar_one_or_none()
         if user is not None:
-            raise UserAlreadyExistsError(f'Пользователь с email {user_email} уже существует!')
+            raise UserAlreadyExistsError(
+                f"Пользователь с email {user_email} уже существует!"
+            )

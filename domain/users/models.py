@@ -1,4 +1,3 @@
-
 from datetime import datetime
 
 from sqlalchemy import DateTime, String
@@ -24,7 +23,7 @@ class User(Base, CommonMixin):
         DateTime(timezone=True),
         nullable=False,
         default=get_utc_now,
-        onupdate=get_utc_now
+        onupdate=get_utc_now,
     )
 
     def __repr__(self) -> str:

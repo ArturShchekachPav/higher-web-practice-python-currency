@@ -1,8 +1,13 @@
-from domain.currency.models import Currency, ExchangeRate
 from datetime import date
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from domain.currency.exceptions import CurrencyNotFoundError, ExchangeRateNotFoundError
+
+from domain.currency.exceptions import (
+    CurrencyNotFoundError,
+    ExchangeRateNotFoundError,
+)
+from domain.currency.models import Currency, ExchangeRate
 
 
 class CurrencyService:
@@ -38,7 +43,6 @@ class CurrencyService:
             )
         return exchange_rate
 
-
     async def get_rate_history(
         self,
         target_code: str,
@@ -59,13 +63,15 @@ class CurrencyService:
             .where(
                 Currency.id == currency.id,
                 ExchangeRate.date >= start_date,
-                ExchangeRate.date <= end_date
+                ExchangeRate.date <= end_date,
             )
             .order_by(ExchangeRate.date.asc())
         )
         return list(result.scalars().all())
 
-    async def get_rates_for_currency(self, target_code: str) -> list[ExchangeRate]:
+    async def get_rates_for_currency(
+        self, target_code: str
+    ) -> list[ExchangeRate]:
         """Получить все курсы обмена для определенной валюты (полная история).
 
         :param target_code: Код валюты (например, 'USD', 'EUR')

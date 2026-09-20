@@ -1,16 +1,14 @@
 import asyncio
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
 
+from alembic import context
 from core.config import settings
 from core.db import Base
-
-# Регистрируем модели в Base.metadata
-from domain.users import models as _users_models  # noqa: F401
 from domain.currency import models as _currency_models  # noqa: F401
 
+from domain.users import models as _users_models  # noqa: F401
 
 config = context.config
 

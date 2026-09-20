@@ -1,12 +1,15 @@
-import scrapy
-from parser.items import CurrencyItem
 from datetime import date, timedelta
+from parser.items import CurrencyItem
+
+import scrapy
 
 
 class CbrSpider(scrapy.Spider):
     name = "cbr"
     allowed_domains = ["cbr.ru"]
-    URL_TEMPLATE = "http://www.cbr.ru/scripts/XML_daily.asp?date_req={day}/{month}/{year}"
+    URL_TEMPLATE = (
+        "http://www.cbr.ru/scripts/XML_daily.asp?date_req={day}/{month}/{year}"
+    )
 
     def __init__(self, days: int = 30, *args, **kwargs):
         super().__init__(*args, **kwargs)

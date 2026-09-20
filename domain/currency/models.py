@@ -9,7 +9,9 @@ from core.db import Base, CommonMixin
 class Currency(Base, CommonMixin):
     __tablename__ = "currencies"
 
-    code: Mapped[str] = mapped_column(String(3), unique=True, index=True, nullable=False)
+    code: Mapped[str] = mapped_column(
+        String(3), unique=True, index=True, nullable=False
+    )
     name: Mapped[str] = mapped_column(String(128), nullable=False)
     nominal: Mapped[int] = mapped_column(nullable=False, default=1)
 
