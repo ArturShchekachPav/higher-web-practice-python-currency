@@ -1,35 +1,90 @@
-# Currency service
+# Currency Service
 
-Нужно реализовать следующие слои:
-## Слой приложения (FastAPI)
+Сервис курсов валют с парсером данных ЦБ РФ.
 
-Имеется три роутера (users, auth, currency). В рамках слоя приложения нужно реализовать следующие ручки:
-### Users
--  `POST /users/register` - регистрация пользователя
-- `GET /users/{user_id}` - получение пользователя по идентификатору (только для авторизованных)
-- `GET /users/email/{email}` - получение пользователя по email (только для авторизованных)
-- `PUT /users` - обновление информации о пользователе (только для авторизованных)
+## Стек
+
+- **FastAPI** — REST API с JWT-авторизацией
+- **SQLAlchemy 2.0** (async) + **asyncpg** — работа с PostgreSQL
+- **Alembic** — миграции
+- **Scrapy** — парсер сайта ЦБ РФ
+- **APScheduler** — автозапуск парсера раз в сутки
+- **Docker** + **Docker Compose** — контейнеризация
+
+## Архитектура
+
+```
+api/          — HTTP-ручки (FastAPI)
+domain/       — бизнес-логика (auth, users, currency)
+core/         — конфиг, БД, security, зависимости, планировщик
+parser/       — Scrapy spider + pipeline
+alembic/      — миграции
+```
+
+## Запуск
+
+### Шаги
+
+1. Клонировать репозиторий:
+   ```bash
+   git clone <url>
+   cd higher-web-practice-python-currency
+   ```
+
+2. Установить зависимости:
+   ```bash
+   uv sync
+   ```
+
+3. Создать `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+4. Запустить всё через Docker:
+   ```bash
+   docker compose up -d --build
+   ```
+
+5. Открыть Swagger:
+   http://127.0.0.1:8000/docs
+
+## Ручки API
 
 ### Auth
-- `POST /auth/login` - логин пользователя и возврат ему токена для последующей авторизации (Bearer)
-- `POST /auth/refresh` - обновление токена авторизации с помощью рефреш токена
 
-### Currency
-- `GET /currencies` - получить список всех доступных валют
-- `GET /currencies/{currency_code}` - получение последнего курса валюты по ее коду
-- `GET /currencies/{currency_code}/history` - получение списка курсов валюты по ее коду. Должны быть start_date и end_date query параметры, чтобы можно было задавать интервал, за который получаем историю по валюте.
-- `GET /currencies/{currency_code}/all` - получение списка курсов валюты по ее коду за весь период.
+- `POST /auth/login` — логин, возвращает access + refresh
+- `POST /auth/refresh` — обновление токена
 
-Все ручки для currency должны быть защищены авторизацией.
+### Users
 
-## Сервисный слой
+- `POST /users/register` — регистрация
+- `GET /users/{user_id}` — получить пользователя (защищено)
+- `GET /users/email/{email}` — получить по email (защищено)
+- `PUT /users` — обновить профиль (защищено)
 
-Нужно реализовать сервисы для каждого из доменов (users, auth и currencies), которые будут использоваться в слое приложения.
+### Currencies
 
+- `GET /currencies` — список валют (защищено)
+- `GET /currencies/{code}` — последний курс (защищено)
+- `GET /currencies/{code}/history?startdate=...&enddate=...` — история (защищено)
+- `GET /currencies/{code}/all` — вся история (защищено)
 
-## Слой базы данных
-Реализовать модели для пользователя, валюты и курса валюты.
+## Парсер
 
+Запускается автоматически раз в 24 часа через APScheduler.
 
-## Парсер ЦБ РФ
-Реализовать скраппер (scrapy Spider) для сайта ЦБ РФ с дневными курсами разных валют к рублю, а также пайплайн с логикой сохранения собранных данных в БД.
+Ручной запуск:
+```bash
+docker compose exec app sh -c "cd parser && scrapy crawl cbr -a days=30"
+```
+
+## Автор
+
+**Артур Щекач**
+- GitHub: [@ArturShchekachPav](https://github.com/ArturShchekachPav)
+- Email: ashhekach@gmail.com
+
+## Лицензия
+
+Учебный проект.
